@@ -73,7 +73,7 @@ var gliloader = {};
             injectScript("dependencies/jquery-1.11.0.min.js", injectState);            
             injectScript("dependencies/ace/ace.js", injectState);
             injectScript("dependencies/ace/theme-monokai.js", injectScript);            
-            injectScript("dependencies/ace/mode-javascript.js", injectScript);            
+            injectScript("dependencies/ace/mode-c_cpp.js", injectScript);            
             injectScript("dependencies/stacktrace.js", injectState);
             
             injectScript("shared/Utilities.js", injectState);

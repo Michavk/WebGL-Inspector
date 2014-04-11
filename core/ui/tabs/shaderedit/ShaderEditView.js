@@ -284,10 +284,7 @@
         var view = this.elements.view;
         editorView = document.createElement("div");
         editorView.id = "editor";
-        editorView.textContent  = '        function foo(items) { \
-            var x = "All this is syntax highlighted"; \
-            return x; \
-        }';
+        editorView.textContent  = program.getVertexShader(gl).source;
 
         this.elements.view.scrollTop = 0;
         view.appendChild(editorView);
@@ -296,7 +293,7 @@
         var editor = ace.edit("editor");
         editor.getSession().setUseWorker(false);
         editor.setTheme("ace/theme/monokai");
-        editor.getSession().setMode("ace/mode/javascript");          
+        editor.getSession().setMode("ace/mode/c_cpp");          
     };
 
     ui.ShaderEditView = ShaderEditView;
