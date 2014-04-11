@@ -70,6 +70,10 @@ var gliloader = {};
             }
             hasInjectedShared = true;
             
+            injectScript("dependencies/jquery-1.11.0.min.js", injectState);            
+            injectScript("dependencies/ace/ace.js", injectState);
+            injectScript("dependencies/ace/theme-monokai.js", injectScript);            
+            injectScript("dependencies/ace/mode-javascript.js", injectScript);            
             injectScript("dependencies/stacktrace.js", injectState);
             
             injectScript("shared/Utilities.js", injectState);
@@ -165,6 +169,7 @@ var gliloader = {};
                 injectCSS("dependencies/syntaxhighlighter_3.0.83/shCore.css", injectState);
                 injectCSS("dependencies/syntaxhighlighter_3.0.83/shThemeDefault.css", injectState);
                 injectCSS("ui/gli.css", injectState);
+                injectCSS("dependencies/ace/monokai.css", injectState);
                 break;
             }
         }

@@ -5,6 +5,16 @@
         var self = this;
         this.el.appendChild(gli.ui.Tab.genericLeftRightView());
 
+        // newScript = document.createElement('script');
+        // newScript.type = 'text/javascript';
+        // newScript.src = 'http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js';
+        // newScript.async = false;
+        // document.getElementsByTagName('head')[0].appendChild(newScript);
+        // $.getScript("http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js", function() {
+        //     alert("Script loaded and executed.");
+        //     // Here you can use anything you defined in the loaded script
+        // });
+
         this.listing = new gli.ui.LeftListing(w, this.el, "program", function (el, program) {
             var gl = w.context;
 

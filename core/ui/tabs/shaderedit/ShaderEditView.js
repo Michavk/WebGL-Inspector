@@ -260,28 +260,43 @@
         while (node.hasChildNodes()) {
           node.removeChild(node.firstChild);
         }
-        if (program) {
+        // if (program) {
 
-            var version;
-            var isCurrent = false;
-            switch (this.window.activeVersion) {
-                case null:
-                    version = program.currentVersion;
-                    break;
-                case "current":
-                    var frame = this.window.controller.currentFrame;
-                    if (frame) {
-                        version = frame.findResourceVersion(program);
-                        isCurrent = true;
-                    }
-                    version = version || program.currentVersion; // Fallback to live
-                    break;
-            }
+        //     var version;
+        //     var isCurrent = false;
+        //     switch (this.window.activeVersion) {
+        //         case null:
+        //             version = program.currentVersion;
+        //             break;
+        //         case "current":
+        //             var frame = this.window.controller.currentFrame;
+        //             if (frame) {
+        //                 version = frame.findResourceVersion(program);
+        //                 isCurrent = true;
+        //             }
+        //             version = version || program.currentVersion; // Fallback to live
+        //             break;
+        //     }
 
-            generateProgramDisplay(this.window.context, this.elements.view, program, version, isCurrent);
-        }
+        //     generateProgramDisplay(this.window.context, this.elements.view, program, version, isCurrent);
+        // }
+
+        var view = this.elements.view;
+        editorView = document.createElement("div");
+        editorView.id = "editor";
+        editorView.textContent  = '        function foo(items) { \
+            var x = "All this is syntax highlighted"; \
+            return x; \
+        }';
 
         this.elements.view.scrollTop = 0;
+        view.appendChild(editorView);
+
+        // Initialize ACE editor
+        var editor = ace.edit("editor");
+        editor.getSession().setUseWorker(false);
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/javascript");          
     };
 
     ui.ShaderEditView = ShaderEditView;
