@@ -595,7 +595,8 @@
         addTab("textures", "Textures", ui.TexturesTab);
         addTab("buffers", "Buffers", ui.BuffersTab);
         addTab("programs", "Programs", ui.ProgramsTab);
-        //addTab("performance", "Performance", ui.PerformanceTab);
+        addTab("shaderedit", "Shader Edit", ui.ShaderEditTab);
+        // addTab("performance", "Performance", ui.PerformanceTab);
 
         this.selectTab("trace");
 
@@ -706,6 +707,10 @@
 
     Window.prototype.showProgram = function (program, switchToCurrent) {
         this.showResource("programs", program, switchToCurrent);
+    };
+
+    Window.prototype.showShaderEdit = function (program, switchToCurrent) {
+        this.showResource("shaderedit", program, switchToCurrent);
     };
 
     ui.Window = Window;

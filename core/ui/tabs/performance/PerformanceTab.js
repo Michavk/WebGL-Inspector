@@ -1,7 +1,7 @@
 (function () {
     var ui = glinamespace("gli.ui");
 
-    var ProgramsTab = function (w) {
+    var PerformanceTab = function (w) {
         var self = this;
         this.el.appendChild(gli.ui.Tab.genericLeftRightView());
 
@@ -77,5 +77,5 @@
         };
     };
 
-    ui.ProgramsTab = ProgramsTab;
+    ui.PerformanceTab = PerformanceTab;
 })();

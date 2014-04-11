@@ -3,7 +3,7 @@
 
     var ProgramsTab = function (w) {
         var self = this;
-        this.el.appendChild(gl.ui.Tab.genericLeftRightView());
+        this.el.appendChild(gli.ui.Tab.genericLeftRightView());
 
         this.listing = new gli.ui.LeftListing(w, this.el, "program", function (el, program) {
             var gl = w.context;

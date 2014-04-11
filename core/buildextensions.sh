@@ -50,6 +50,9 @@ cd ..
 cd programs
 cat ProgramsTab.js ProgramView.js > ../cat.ui.tabs.programs.js
 cd ..
+cd shaderedit
+car ShaderEditTab.js ShaderEditView.js > ../cat.ui.tabs.shaderedit.js
+cd ..
 cd performance
 cat PerformanceTab.js PerformanceView.js > ../cat.ui.tabs.performance.js
 cd ..

@@ -153,8 +153,11 @@ var gliloader = {};
                 injectScript("ui/tabs/programs/ProgramsTab.js", injectState);
                 injectScript("ui/tabs/programs/ProgramView.js", injectState);
 
-                injectScript("ui/tabs/performance/PerformanceTab.js", injectState);
-                injectScript("ui/tabs/performance/PerformanceView.js", injectState);
+                injectScript("ui/tabs/shaderedit/ShaderEditTab.js", injectState);
+                injectScript("ui/tabs/shaderedit/ShaderEditView.js", injectState);                
+
+                // injectScript("ui/tabs/performance/PerformanceTab.js", injectState);
+                // injectScript("ui/tabs/performance/PerformanceView.js", injectState);
 
                 break;
             case "ui_css":
