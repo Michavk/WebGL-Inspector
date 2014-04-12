@@ -11,247 +11,39 @@
         this.currentProgram = null;
     };
 
-    function prettyPrintSource(el, source, highlightLines) {
-        var div = document.createElement("div");
-        div.textContent = source;
-        el.appendChild(div);
+    ShaderEditView.prototype.testChange = function() {
+        var self = this;
+    }
 
-        var firstLine = 1;
-        var firstChar = source.search(/./);
-        if (firstChar > 0) {
-            firstLine += firstChar;
+    ShaderEditView.prototype.shaderChanged = function() {
+        var gl = this.window.context;
+        var vs = gl.createShader(gl.VERTEX_SHADER);
+        var ps = gl.createShader(gl.FRAGMENT_SHADER);
+
+        var vsSrc = this.editorVS.getValue();
+        var psSrc = this.editorPS.getValue();
+        gl.shaderSource(vs, vsSrc);
+        gl.shaderSource(ps, psSrc);
+
+        gl.compileShader(vs);
+        gl.compileShader(ps);
+
+       if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+            alert(gl.getShaderInfoLog(vs));
+            return null;
         }
 
-        SyntaxHighlighter.highlight({
-            brush: 'glsl',
-            'first-line': firstLine,
-            highlight: highlightLines,
-            toolbar: false
-        }, div);
-    };
-
-    function generateShaderDisplay(gl, el, shader) {
-        var shaderType = (shader.type == gl.VERTEX_SHADER) ? "Vertex" : "Fragment";
-
-        var titleDiv = document.createElement("div");
-        titleDiv.className = "info-title-secondary";
-        titleDiv.textContent = shaderType + " " + shader.getName();
-        el.appendChild(titleDiv);
-
-        gli.ui.appendParameters(gl, el, shader, ["COMPILE_STATUS", "DELETE_STATUS"]);
-
-        var highlightLines = [];
-        if (shader.infoLog && shader.infoLog.length > 0) {
-            var errorLines = shader.infoLog.match(/^ERROR: [0-9]+:[0-9]+: /gm);
-            if (errorLines) {
-                for (var n = 0; n < errorLines.length; n++) {
-                    // expecting: 'ERROR: 0:LINE: '
-                    var errorLine = errorLines[n];
-                    errorLine = parseInt(errorLine.match(/ERROR: [0-9]+:([0-9]+): /)[1]);
-                    highlightLines.push(errorLine);
-                }
-            }
+       if (!gl.getShaderParameter(ps, gl.COMPILE_STATUS)) {
+            alert(gl.getShaderInfoLog(ps));
+            return null;
         }
 
-        var sourceDiv = document.createElement("div");
-        sourceDiv.className = "shader-info-source";
-        if (shader.source) {
-            prettyPrintSource(sourceDiv, shader.source, highlightLines);
-        } else {
-            sourceDiv.textContent = "[no source uploaded]";
-        }
-        el.appendChild(sourceDiv);
-
-        if (shader.infoLog && shader.infoLog.length > 0) {
-            var infoDiv = document.createElement("div");
-            infoDiv.className = "program-info-log";
-            shader.infoLog.split("\n").forEach(function (line) {
-              infoDiv.appendChild(document.createTextNode(line));
-              infoDiv.appendChild(document.createElement("br"));
-            });
-            el.appendChild(infoDiv);
-            gli.ui.appendbr(el);
-        }
-    };
-
-    function appendTable(context, gl, el, program, name, tableData, valueCallback) {
-        // [ordinal, name, size, type, optional value]
-        var table = document.createElement("table");
-        table.className = "program-attribs";
-
-        var tr = document.createElement("tr");
-        var td = document.createElement("th");
-        td.textContent = "idx";
-        tr.appendChild(td);
-        td = document.createElement("th");
-        td.className = "program-attribs-name";
-        td.textContent = name + " name";
-        tr.appendChild(td);
-        td = document.createElement("th");
-        td.textContent = "size";
-        tr.appendChild(td);
-        td = document.createElement("th");
-        td.className = "program-attribs-type";
-        td.textContent = "type";
-        tr.appendChild(td);
-        if (valueCallback) {
-            td = document.createElement("th");
-            td.className = "program-attribs-value";
-            td.textContent = "value";
-            tr.appendChild(td);
-        }
-        table.appendChild(tr);
-
-        for (var n = 0; n < tableData.length; n++) {
-            var row = tableData[n];
-
-            var tr = document.createElement("tr");
-            td = document.createElement("td");
-            td.textContent = row[0];
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.textContent = row[1];
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.textContent = row[2];
-            tr.appendChild(td);
-            td = document.createElement("td");
-            switch (row[3]) {
-                case gl.FLOAT:
-                    td.textContent = "FLOAT";
-                    break;
-                case gl.FLOAT_VEC2:
-                    td.textContent = "FLOAT_VEC2";
-                    break;
-                case gl.FLOAT_VEC3:
-                    td.textContent = "FLOAT_VEC3";
-                    break;
-                case gl.FLOAT_VEC4:
-                    td.textContent = "FLOAT_VEC4";
-                    break;
-                case gl.INT:
-                    td.textContent = "INT";
-                    break;
-                case gl.INT_VEC2:
-                    td.textContent = "INT_VEC2";
-                    break;
-                case gl.INT_VEC3:
-                    td.textContent = "INT_VEC3";
-                    break;
-                case gl.INT_VEC4:
-                    td.textContent = "INT_VEC4";
-                    break;
-                case gl.BOOL:
-                    td.textContent = "BOOL";
-                    break;
-                case gl.BOOL_VEC2:
-                    td.textContent = "BOOL_VEC2";
-                    break;
-                case gl.BOOL_VEC3:
-                    td.textContent = "BOOL_VEC3";
-                    break;
-                case gl.BOOL_VEC4:
-                    td.textContent = "BOOL_VEC4";
-                    break;
-                case gl.FLOAT_MAT2:
-                    td.textContent = "FLOAT_MAT2";
-                    break;
-                case gl.FLOAT_MAT3:
-                    td.textContent = "FLOAT_MAT3";
-                    break;
-                case gl.FLOAT_MAT4:
-                    td.textContent = "FLOAT_MAT4";
-                    break;
-                case gl.SAMPLER_2D:
-                    td.textContent = "SAMPLER_2D";
-                    break;
-                case gl.SAMPLER_CUBE:
-                    td.textContent = "SAMPLER_CUBE";
-                    break;
-            }
-            tr.appendChild(td);
-
-            if (valueCallback) {
-                td = document.createElement("td");
-                valueCallback(n, td);
-                tr.appendChild(td);
-            }
-
-            table.appendChild(tr);
-        }
-
-        el.appendChild(table);
-    };
-
-    function appendUniformInfos(gl, el, program, isCurrent) {
-        var tableData = [];
-        var uniformInfos = program.getUniformInfos(gl, program.target);
-        for (var n = 0; n < uniformInfos.length; n++) {
-            var uniformInfo = uniformInfos[n];
-            tableData.push([uniformInfo.index, uniformInfo.name, uniformInfo.size, uniformInfo.type]);
-        }
-        appendTable(gl, gl, el, program, "uniform", tableData, null);
-    };
-
-    function appendAttributeInfos(gl, el, program) {
-        var tableData = [];
-        var attribInfos = program.getAttribInfos(gl, program.target);
-        for (var n = 0; n < attribInfos.length; n++) {
-            var attribInfo = attribInfos[n];
-            tableData.push([attribInfo.index, attribInfo.name, attribInfo.size, attribInfo.type]);
-        }
-        appendTable(gl, gl, el, program, "attribute", tableData, null);
-    };
-
-    function generateProgramDisplay(gl, el, program, version, isCurrent) {
-        var titleDiv = document.createElement("div");
-        titleDiv.className = "info-title-master";
-        titleDiv.textContent = program.getName();
-        el.appendChild(titleDiv);
-
-        gli.ui.appendParameters(gl, el, program, ["LINK_STATUS", "VALIDATE_STATUS", "DELETE_STATUS", "ACTIVE_UNIFORMS", "ACTIVE_ATTRIBUTES"]);
-        gli.ui.appendbr(el);
-
-        if (program.parameters[gl.ACTIVE_UNIFORMS] > 0) {
-            appendUniformInfos(gl, el, program, isCurrent);
-            gli.ui.appendbr(el);
-        }
-        if (program.parameters[gl.ACTIVE_ATTRIBUTES] > 0) {
-            appendAttributeInfos(gl, el, program);
-            gli.ui.appendbr(el);
-        }
-
-        if (program.infoLog && program.infoLog.length > 0) {
-            var infoDiv = document.createElement("div");
-            infoDiv.className = "program-info-log";
-            program.infoLog.split("\n").forEach(function (line) {
-              infoDiv.appendChild(document.createTextNode(line));
-              infoDiv.appendChild(document.createElement("br"));
-            });
-            el.appendChild(infoDiv);
-            gli.ui.appendbr(el);
-        }
-
-        var frame = gl.ui.controller.currentFrame;
-        if (frame) {
-            gli.ui.appendSeparator(el);
-            gli.ui.generateUsageList(gl, el, frame, program);
-            gli.ui.appendbr(el);
-        }
-
-        var vertexShader = program.getVertexShader(gl);
-        var fragmentShader = program.getFragmentShader(gl);
-        if (vertexShader) {
-            var vertexShaderDiv = document.createElement("div");
-            gli.ui.appendSeparator(el);
-            generateShaderDisplay(gl, el, vertexShader);
-        }
-        if (fragmentShader) {
-            var fragmentShaderDiv = document.createElement("div");
-            gli.ui.appendSeparator(el);
-            generateShaderDisplay(gl, el, fragmentShader);
-        }
-    };
+        shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vs);
+        gl.attachShader(shaderProgram, ps);
+        gl.linkProgram(shaderProgram);
+        gl.useProgram(shaderProgram);
+    }
 
     ShaderEditView.prototype.setProgram = function (program) {
         this.currentProgram = program;
@@ -274,17 +66,29 @@
             leftCol.className = "left_col";
             leftCol.style.width = width;
             leftCol.style.height = height;
+            leftCol.style.background = "#222222";
             twoColumn.appendChild(leftCol);
             bottomLeftColFrame = document.createElement("div");
-            bottomLeftColFrame.innerHTML = '<center><p class="left_col" style="font-family:arial;color:white;font-size:14px;background-color:#222222;width:100%">Vertex Shader</p></center>';
+            bottomLeftColFrame.innerHTML = 
+                '<p class="left_col" style="font-family:arial;color:white;font-size:14px;background-color:#222222;width:20%"> \
+                        Vertex Shader \
+                 </p> \
+                 <button class="right_col" id="vsLoadButton" style="height:5%">Load</button> \
+                ';
 
             rightCol = document.createElement("div");
             rightCol.className = "right_col";
             rightCol.style.width = width;
             rightCol.style.height = height;
+            rightCol.style.background = "#222222";            
             twoColumn.appendChild(rightCol);
             bottomRightColFrame = document.createElement("div");
-            bottomRightColFrame.innerHTML = '<center><p class="right_col" style="font-family:arial;color:white;font-size:14px;background-color:#222222;width:100%">Fragment Shader</p></center>';
+            bottomRightColFrame.innerHTML = 
+                '<p class="left_col" style="font-family:arial;color:white;font-size:14px;background-color:#222222;width:20%"> \
+                        Fragment Shader \
+                 </p> \
+                 <button class="right_col" id="fsLoadButton" style="height:5%">Load</button> \
+                ';
 
             editorViewVS = document.createElement("div");
             editorViewVS.id = "editorVS";
@@ -295,10 +99,10 @@
             leftCol.appendChild(bottomLeftColFrame);
 
             // Initialize ACE editor
-            var editorVS = ace.edit("editorVS");
-            editorVS.getSession().setUseWorker(false);
-            editorVS.setTheme("ace/theme/monokai");
-            editorVS.getSession().setMode("ace/mode/c_cpp");
+            this.editorVS = ace.edit("editorVS");
+            this.editorVS.getSession().setUseWorker(false);
+            this.editorVS.setTheme("ace/theme/monokai");
+            this.editorVS.getSession().setMode("ace/mode/c_cpp");
 
             editorViewPS = document.createElement("div");
             editorViewPS.id = "editorPS";
@@ -309,10 +113,17 @@
             rightCol.appendChild(bottomRightColFrame);
 
             // Initialize ACE editor
-            var editorPS = ace.edit("editorPS");
-            editorPS.getSession().setUseWorker(false);
-            editorPS.setTheme("ace/theme/monokai");
-            editorPS.getSession().setMode("ace/mode/c_cpp");       
+            this.editorPS = ace.edit("editorPS");
+            this.editorPS.getSession().setUseWorker(false);
+            this.editorPS.setTheme("ace/theme/monokai");
+            this.editorPS.getSession().setMode("ace/mode/c_cpp");
+
+            var elem = this;
+            // this.editorVS.getSession().on("change", function() { elem.shaderChanged(); });
+
+            // this.editorPS.getSession().on("change", function() { elem.shaderChanged(); });
+
+            this.testChange();
         }
     };
 
