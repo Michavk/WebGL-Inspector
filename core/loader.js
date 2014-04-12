@@ -70,7 +70,8 @@ var gliloader = {};
             }
             hasInjectedShared = true;
             
-            injectScript("dependencies/jquery-1.11.0.min.js", injectState);            
+            injectScript("dependencies/jquery-1.11.0.min.js", injectState);
+            injectScript("dependencies/require.js", injectState);            
             injectScript("dependencies/ace/ace.js", injectState);
             injectScript("dependencies/ace/theme-monokai.js", injectState);            
             injectScript("dependencies/ace/mode-c_cpp.js", injectState);            

@@ -281,19 +281,21 @@
         //     generateProgramDisplay(this.window.context, this.elements.view, program, version, isCurrent);
         // }
 
-        var view = this.elements.view;
-        editorView = document.createElement("div");
-        editorView.id = "editor";
-        editorView.textContent  = program.getVertexShader(gl).source;
+        if (program) {
+            var view = this.elements.view;
+            editorView = document.createElement("div");
+            editorView.id = "editor";
+            editorView.textContent  = program.getVertexShader(gl).source;
 
-        this.elements.view.scrollTop = 0;
-        view.appendChild(editorView);
+            this.elements.view.scrollTop = 0;
+            view.appendChild(editorView);
 
-        // Initialize ACE editor
-        var editor = ace.edit("editor");
-        editor.getSession().setUseWorker(false);
-        editor.setTheme("ace/theme/monokai");
-        editor.getSession().setMode("ace/mode/c_cpp");          
+            // Initialize ACE editor
+            var editor = ace.edit("editor");
+            editor.getSession().setUseWorker(false);
+            editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/c_cpp");
+        }
     };
 
     ui.ShaderEditView = ShaderEditView;
