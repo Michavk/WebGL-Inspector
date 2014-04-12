@@ -260,30 +260,11 @@
         while (node.hasChildNodes()) {
           node.removeChild(node.firstChild);
         }
-        // if (program) {
-
-        //     var version;
-        //     var isCurrent = false;
-        //     switch (this.window.activeVersion) {
-        //         case null:
-        //             version = program.currentVersion;
-        //             break;
-        //         case "current":
-        //             var frame = this.window.controller.currentFrame;
-        //             if (frame) {
-        //                 version = frame.findResourceVersion(program);
-        //                 isCurrent = true;
-        //             }
-        //             version = version || program.currentVersion; // Fallback to live
-        //             break;
-        //     }
-
-        //     generateProgramDisplay(this.window.context, this.elements.view, program, version, isCurrent);
-        // }
 
         if (program) {
             var view = this.elements.view;
             var width = view.clientWidth / 2;
+            var height = view.clientHeight;
 
             twoColumn = document.createElement("div");
             twoColumn.className = "wrap";
@@ -292,12 +273,18 @@
             leftCol = document.createElement("div");
             leftCol.className = "left_col";
             leftCol.style.width = width;
+            leftCol.style.height = height;
             twoColumn.appendChild(leftCol);
+            bottomLeftColFrame = document.createElement("div");
+            bottomLeftColFrame.innerHTML = '<center><p class="left_col" style="font-family:arial;color:white;font-size:14px;background-color:#222222;width:100%">Vertex Shader</p></center>';
 
             rightCol = document.createElement("div");
             rightCol.className = "right_col";
             rightCol.style.width = width;
+            rightCol.style.height = height;
             twoColumn.appendChild(rightCol);
+            bottomRightColFrame = document.createElement("div");
+            bottomRightColFrame.innerHTML = '<center><p class="right_col" style="font-family:arial;color:white;font-size:14px;background-color:#222222;width:100%">Fragment Shader</p></center>';
 
             editorViewVS = document.createElement("div");
             editorViewVS.id = "editorVS";
@@ -305,6 +292,7 @@
 
             this.elements.view.scrollTop = 0;
             leftCol.appendChild(editorViewVS);
+            leftCol.appendChild(bottomLeftColFrame);
 
             // Initialize ACE editor
             var editorVS = ace.edit("editorVS");
@@ -318,6 +306,7 @@
 
             this.elements.view.scrollTop = 0;
             rightCol.appendChild(editorViewPS);
+            rightCol.appendChild(bottomRightColFrame);
 
             // Initialize ACE editor
             var editorPS = ace.edit("editorPS");
