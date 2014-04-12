@@ -283,18 +283,47 @@
 
         if (program) {
             var view = this.elements.view;
-            editorView = document.createElement("div");
-            editorView.id = "editor";
-            editorView.textContent  = program.getVertexShader(gl).source;
+            var width = view.clientWidth / 2;
+
+            twoColumn = document.createElement("div");
+            twoColumn.className = "wrap";
+            view.appendChild(twoColumn);
+
+            leftCol = document.createElement("div");
+            leftCol.className = "left_col";
+            leftCol.style.width = width;
+            twoColumn.appendChild(leftCol);
+
+            rightCol = document.createElement("div");
+            rightCol.className = "right_col";
+            rightCol.style.width = width;
+            twoColumn.appendChild(rightCol);
+
+            editorViewVS = document.createElement("div");
+            editorViewVS.id = "editorVS";
+            editorViewVS.textContent  = program.getVertexShader(gl).source;
 
             this.elements.view.scrollTop = 0;
-            view.appendChild(editorView);
+            leftCol.appendChild(editorViewVS);
 
             // Initialize ACE editor
-            var editor = ace.edit("editor");
-            editor.getSession().setUseWorker(false);
-            editor.setTheme("ace/theme/monokai");
-            editor.getSession().setMode("ace/mode/c_cpp");
+            var editorVS = ace.edit("editorVS");
+            editorVS.getSession().setUseWorker(false);
+            editorVS.setTheme("ace/theme/monokai");
+            editorVS.getSession().setMode("ace/mode/c_cpp");
+
+            editorViewPS = document.createElement("div");
+            editorViewPS.id = "editorPS";
+            editorViewPS.textContent  = program.getFragmentShader(gl).source;
+
+            this.elements.view.scrollTop = 0;
+            rightCol.appendChild(editorViewPS);
+
+            // Initialize ACE editor
+            var editorPS = ace.edit("editorPS");
+            editorPS.getSession().setUseWorker(false);
+            editorPS.setTheme("ace/theme/monokai");
+            editorPS.getSession().setMode("ace/mode/c_cpp");       
         }
     };
 
