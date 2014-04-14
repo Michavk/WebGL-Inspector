@@ -17,8 +17,8 @@
 
     ShaderEditView.prototype.shaderChanged = function() {
         var gl = this.window.context;
-        var vs = gl.createShader(gl.VERTEX_SHADER);
-        var ps = gl.createShader(gl.FRAGMENT_SHADER);
+        var vs = this.program.shaders[0];
+        var ps = this.program.shaders[1];
 
         var vsSrc = this.editorVS.getValue();
         var psSrc = this.editorPS.getValue();
@@ -38,7 +38,7 @@
             return null;
         }
 
-        shaderProgram = gl.createProgram();
+        shaderProgram = this.program;
         gl.attachShader(shaderProgram, vs);
         gl.attachShader(shaderProgram, ps);
         gl.linkProgram(shaderProgram);
@@ -54,6 +54,7 @@
         }
 
         if (program) {
+            this.program = program;
             var view = this.elements.view;
             var width = view.clientWidth / 2;
             var height = view.clientHeight;
@@ -119,6 +120,11 @@
             this.editorPS.getSession().setMode("ace/mode/c_cpp");
 
             var elem = this;
+
+            $("#vsLoadButton").click(function() { elem.shaderChanged(); });
+
+            $("#fsLoadButton").click(function() { elem.shaderChanged(); });
+
             // this.editorVS.getSession().on("change", function() { elem.shaderChanged(); });
 
             // this.editorPS.getSession().on("change", function() { elem.shaderChanged(); });
